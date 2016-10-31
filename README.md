@@ -4,11 +4,11 @@
 
 Complete these exercises in order, using `git` to checkpoint your work as you go along.
 
-As always, it is recommended that you read this entire problem set prior to beginning it so that you understand what you are building towards. Everything presented here should use DOM manipulation and an Express API to build a Single Page Application (SPA).
+As always, it is recommended that you read this entire problem set prior to beginning it so that you understand what you are building towards. Use your favorite front-end framework and a Spring Boot REST API to build a Single Page Application.
 
 ### Starting point
 
-Use the Express generator to Create a new Express application in the directory that you cloned your forked repository to. You may call this application `products_and_categories` (or whatever you want that represents what it is). For this application you will not have to worry about style until stretch goals. Here are the features you are looking to build:
+Use `gradle init --type java-library` to Create a Gradle application in the directory that you cloned your forked repository to. You may call this application `products_and_categories` (or whatever you want that represents what it is). For this application you will not have to worry about style until stretch goals. Here are the features you are looking to build:
 
 #### Feature 0
 
