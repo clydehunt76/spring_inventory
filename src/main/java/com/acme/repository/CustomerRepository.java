@@ -1,7 +1,8 @@
-package com.acme;
+package com.acme.repository;
 
 import java.util.List;
 
+import com.acme.model.Customer;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CustomerRepository extends CrudRepository<Customer, Long> {

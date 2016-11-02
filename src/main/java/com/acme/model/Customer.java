@@ -1,4 +1,4 @@
-package com.acme;
+package com.acme.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
