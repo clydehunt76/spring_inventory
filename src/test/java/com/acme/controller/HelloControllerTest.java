@@ -30,12 +30,21 @@ public class HelloControllerTest {
 
     @Before
     public void insertData() {
+        repository.deleteAll();
         repository.save(new Customer("Jack", "Bauer"));
     }
 
     @Test
     public void getCustomers() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/customers")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("[{\"id\":2,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
+    }
+
+    @Test
+    public void getCustomerById() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/customers/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("[{\"id\":1,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
