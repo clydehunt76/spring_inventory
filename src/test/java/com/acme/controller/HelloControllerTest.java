@@ -1,14 +1,9 @@
 package com.acme.controller;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.acme.model.Customer;
 import com.acme.repository.CustomerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,16 +34,15 @@ public class HelloControllerTest {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final TypeFactory typeFactory = mapper.getTypeFactory();
-    private static final Customer testCustomer = new Customer("Jack", "Bauer");
 
     @Before
-    public void insertData() {
+    public void cleanup() {
         repository.deleteAll();
-        repository.save(testCustomer);
     }
 
     @Test
     public void getCustomers() throws Exception {
+        Customer testCustomer = repository.save(new Customer("Jack", "Bauer"));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/customers")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -60,7 +56,8 @@ public class HelloControllerTest {
 
     @Test
     public void getCustomerById() throws Exception {
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/customers/1")
+        Customer testCustomer = repository.save(new Customer("Jack", "Bauer"));
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/customers/" + testCustomer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -73,9 +70,9 @@ public class HelloControllerTest {
 
     @Test
     public void postCustomer() throws Exception {
-        Customer customer = new Customer("Brent", "Gardner");
+        Customer testCustomer = repository.save(new Customer("Jack", "Bauer"));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/customers")
-                .content(new ObjectMapper().writeValueAsBytes(customer))
+                .content(new ObjectMapper().writeValueAsBytes(testCustomer))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -83,16 +80,16 @@ public class HelloControllerTest {
         Customer returned = mapper.readValue(result.getResponse().getContentAsString(),
                 typeFactory.constructType(Customer.class));
         Assert.assertNotNull(returned);
-        Assert.assertEquals(customer.getFirstName(), returned.getFirstName());
-        Assert.assertEquals(customer.getLastName(), returned.getLastName());
+        Assert.assertNotNull(returned.getId());
+        Assert.assertEquals(testCustomer.getFirstName(), returned.getFirstName());
+        Assert.assertEquals(testCustomer.getLastName(), returned.getLastName());
     }
 
     @Test
     public void putCustomer() throws Exception {
-        Customer customer = new Customer("Bob", "Hope");
-        customer.setId(1L);
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.put("/customers/1")
-                .content(new ObjectMapper().writeValueAsBytes(customer))
+        Customer testCustomer = repository.save(new Customer("Jack", "Bauer"));
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.put("/customers/" + testCustomer.getId())
+                .content(new ObjectMapper().writeValueAsBytes(testCustomer))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -100,14 +97,15 @@ public class HelloControllerTest {
         Customer returned = mapper.readValue(result.getResponse().getContentAsString(),
                 typeFactory.constructType(Customer.class));
         Assert.assertNotNull(returned);
-        Assert.assertEquals(customer.getFirstName(), returned.getFirstName());
-        Assert.assertEquals(customer.getLastName(), returned.getLastName());
+        Assert.assertEquals(testCustomer.getId(), returned.getId());
+        Assert.assertEquals(testCustomer.getFirstName(), returned.getFirstName());
+        Assert.assertEquals(testCustomer.getLastName(), returned.getLastName());
     }
 
     @Test
     public void deleteCustomer() throws Exception {
-        Customer customer = repository.save(new Customer("Bob", "Newheart"));
-        mvc.perform(MockMvcRequestBuilders.delete("/customers/" + customer.getId())
+        Customer testCustomer = repository.save(new Customer("Jack", "Bauer"));
+        mvc.perform(MockMvcRequestBuilders.delete("/customers/" + testCustomer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
