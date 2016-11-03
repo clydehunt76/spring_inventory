@@ -2,13 +2,11 @@ package com.acme.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "customer")
-public class Customer {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,9 +16,9 @@ public class Customer {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "customer_category",
+            name = "product_category",
             joinColumns = {
-                    @JoinColumn(name = "customerId", nullable = false, updatable = false)
+                    @JoinColumn(name = "productId", nullable = false, updatable = false)
             },
             inverseJoinColumns = {
                     @JoinColumn(name = "categoryId", nullable = false, updatable = false)
@@ -28,10 +26,10 @@ public class Customer {
     )
     private List<Category> categories = new ArrayList<>(0);
 
-    protected Customer() {
+    protected Product() {
     }
 
-    public Customer(String firstName, String lastName) {
+    public Product(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -39,7 +37,7 @@ public class Customer {
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%d, firstName='%s', lastName='%s']",
+                "Product[id=%d, firstName='%s', lastName='%s']",
                 id, firstName, lastName);
     }
 
@@ -70,6 +68,7 @@ public class Customer {
     public List<Category> getCategogies() {
         return this.categories;
     }
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }

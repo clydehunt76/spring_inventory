@@ -2,9 +2,7 @@ package com.acme.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "Category")
@@ -16,7 +14,7 @@ public class Category {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
-    private List<Customer> customers = new ArrayList<>(0);
+    private List<Product> products = new ArrayList<>(0);
 
     protected Category() {
     }
@@ -48,11 +46,11 @@ public class Category {
         this.name = name;
     }
 
-    public List<Customer> getCustomers() {
-        return this.customers;
+    public List<Product> getProducts() {
+        return this.products;
     }
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
 }
