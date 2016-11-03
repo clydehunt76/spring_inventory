@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.acme.model.Customer;
 import com.acme.repository.CustomerRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +40,7 @@ public class HelloControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/customers")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":2,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
+                .andExpect(content().string(equalTo("[{\"id\":4,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
     }
 
     @Test
@@ -48,6 +49,17 @@ public class HelloControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("[{\"id\":1,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
+    }
+
+    @Test
+    public void postCustomer() throws Exception {
+        Customer customer = new Customer("Brent", "Gardner");
+        mvc.perform(MockMvcRequestBuilders.post("/customers")
+                .content(new ObjectMapper().writeValueAsBytes(customer))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("{\"id\":3,\"firstName\":\"Brent\",\"lastName\":\"Gardner\"}")));
     }
 
     @Test
