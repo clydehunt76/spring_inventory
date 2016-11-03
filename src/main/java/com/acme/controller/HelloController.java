@@ -32,14 +32,19 @@ public class HelloController {
         return saved;
     }
 
+    @RequestMapping(path="/customers/{customerId}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long customerId, @RequestBody Customer customer) {
+        if(customerId == null || !customerId.equals(customer.getId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Customer saved = repository.save(customer);
+        return new ResponseEntity<>(saved, HttpStatus.OK);
+    }
+
     @RequestMapping("/customers/{customerId}")
     public Iterable<Customer> customers(@PathVariable Long customerId) {
         return repository.findById(customerId);
-    }
-
-    @RequestMapping("/hello")
-    public String hello() {
-        return helloService.getMessage();
     }
 
 }

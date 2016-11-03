@@ -7,6 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.acme.model.Customer;
 import com.acme.repository.CustomerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,44 +35,73 @@ public class HelloControllerTest {
     @Autowired
     CustomerRepository repository;
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final TypeFactory typeFactory = mapper.getTypeFactory();
+    private static final Customer testCustomer = new Customer("Jack", "Bauer");
+
     @Before
     public void insertData() {
         repository.deleteAll();
-        repository.save(new Customer("Jack", "Bauer"));
+        repository.save(testCustomer);
     }
 
     @Test
     public void getCustomers() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/customers")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/customers")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":4,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
+                .andReturn();
+        List<Customer> customers = mapper.readValue(result.getResponse().getContentAsString(),
+                typeFactory.constructCollectionType(List.class, Customer.class));
+        Assert.assertEquals(1, customers.size());
+        Assert.assertEquals(testCustomer.getFirstName(), customers.get(0).getFirstName());
+        Assert.assertEquals(testCustomer.getLastName(), customers.get(0).getLastName());
     }
 
     @Test
     public void getCustomerById() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/customers/1")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/customers/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":1,\"firstName\":\"Jack\",\"lastName\":\"Bauer\"}]")));
+                .andReturn();
+        List<Customer> customers = mapper.readValue(result.getResponse().getContentAsString(),
+                typeFactory.constructCollectionType(List.class, Customer.class));
+        Assert.assertEquals(1, customers.size());
+        Assert.assertEquals(testCustomer.getFirstName(), customers.get(0).getFirstName());
+        Assert.assertEquals(testCustomer.getLastName(), customers.get(0).getLastName());
     }
 
     @Test
     public void postCustomer() throws Exception {
         Customer customer = new Customer("Brent", "Gardner");
-        mvc.perform(MockMvcRequestBuilders.post("/customers")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/customers")
                 .content(new ObjectMapper().writeValueAsBytes(customer))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("{\"id\":3,\"firstName\":\"Brent\",\"lastName\":\"Gardner\"}")));
+                .andReturn();
+        Customer returned = mapper.readValue(result.getResponse().getContentAsString(),
+                typeFactory.constructType(Customer.class));
+        Assert.assertNotNull(returned);
+        Assert.assertEquals(customer.getFirstName(), returned.getFirstName());
+        Assert.assertEquals(customer.getLastName(), returned.getLastName());
     }
 
     @Test
-    public void getHello() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/hello")
-                .accept(MediaType.ALL))
+    public void putCustomer() throws Exception {
+        Customer customer = new Customer("Bob", "Hope");
+        customer.setId(1L);
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.put("/customers/1")
+                .content(new ObjectMapper().writeValueAsBytes(customer))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Hello, world!")));
+                .andReturn();
+        Customer returned = mapper.readValue(result.getResponse().getContentAsString(),
+                typeFactory.constructType(Customer.class));
+        Assert.assertNotNull(returned);
+        Assert.assertEquals(customer.getFirstName(), returned.getFirstName());
+        Assert.assertEquals(customer.getLastName(), returned.getLastName());
     }
+
 }
