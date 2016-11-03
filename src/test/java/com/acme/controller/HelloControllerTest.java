@@ -104,4 +104,12 @@ public class HelloControllerTest {
         Assert.assertEquals(customer.getLastName(), returned.getLastName());
     }
 
+    @Test
+    public void deleteCustomer() throws Exception {
+        Customer customer = repository.save(new Customer("Bob", "Newheart"));
+        mvc.perform(MockMvcRequestBuilders.delete("/customers/" + customer.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

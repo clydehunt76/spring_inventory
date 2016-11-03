@@ -42,6 +42,12 @@ public class HelloController {
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
+    @RequestMapping(path="/customers/{customerId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCustomer(@PathVariable Long customerId) {
+        repository.delete(customerId);
+    }
+
     @RequestMapping("/customers/{customerId}")
     public Iterable<Customer> customers(@PathVariable Long customerId) {
         return repository.findById(customerId);
