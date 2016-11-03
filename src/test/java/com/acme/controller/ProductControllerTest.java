@@ -1,6 +1,8 @@
 package com.acme.controller;
 
+import com.acme.model.Category;
 import com.acme.model.Product;
+import com.acme.repository.CategoryRepository;
 import com.acme.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -30,19 +32,22 @@ public class ProductControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    ProductRepository repository;
+    ProductRepository productRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final TypeFactory typeFactory = mapper.getTypeFactory();
 
     @Before
     public void cleanup() {
-        repository.deleteAll();
+        productRepository.deleteAll();
     }
 
     @Test
     public void getProducts() throws Exception {
-        Product testProduct = repository.save(new Product("Jack", "Bauer"));
+        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -56,7 +61,7 @@ public class ProductControllerTest {
 
     @Test
     public void getProductById() throws Exception {
-        Product testProduct = repository.save(new Product("Jack", "Bauer"));
+        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products/" + testProduct.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -70,9 +75,11 @@ public class ProductControllerTest {
 
     @Test
     public void postProduct() throws Exception {
-        Product testProduct = repository.save(new Product("Jack", "Bauer"));
+        Product product = productRepository.save(new Product("Jack", "Bauer"));
+        Category category = categoryRepository.save(new Category("Action Heroes"));
+        product.getCategogies().add(category);
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/products")
-                .content(new ObjectMapper().writeValueAsBytes(testProduct))
+                .content(new ObjectMapper().writeValueAsBytes(product))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -81,13 +88,13 @@ public class ProductControllerTest {
                 typeFactory.constructType(Product.class));
         Assert.assertNotNull(returned);
         Assert.assertNotNull(returned.getId());
-        Assert.assertEquals(testProduct.getFirstName(), returned.getFirstName());
-        Assert.assertEquals(testProduct.getLastName(), returned.getLastName());
+        Assert.assertEquals(product.getFirstName(), returned.getFirstName());
+        Assert.assertEquals(product.getLastName(), returned.getLastName());
     }
 
     @Test
     public void putProduct() throws Exception {
-        Product testProduct = repository.save(new Product("Jack", "Bauer"));
+        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.put("/products/" + testProduct.getId())
                 .content(new ObjectMapper().writeValueAsBytes(testProduct))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +111,7 @@ public class ProductControllerTest {
 
     @Test
     public void deleteProduct() throws Exception {
-        Product testProduct = repository.save(new Product("Jack", "Bauer"));
+        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
         mvc.perform(MockMvcRequestBuilders.delete("/products/" + testProduct.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

@@ -13,6 +13,7 @@ public class Category {
     private Long id;
     private String name;
 
+    @Transient
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
     private List<Product> products = new ArrayList<>(0);
 
