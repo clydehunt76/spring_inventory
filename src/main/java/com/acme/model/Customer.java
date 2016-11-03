@@ -1,13 +1,13 @@
 package com.acme.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
+@Table(name = "customer")
 public class Customer {
 
     @Id
@@ -15,6 +15,18 @@ public class Customer {
     private Long id;
     private String firstName;
     private String lastName;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "customer_category",
+            joinColumns = {
+                    @JoinColumn(name = "customerId", nullable = false, updatable = false)
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "categoryId", nullable = false, updatable = false)
+            }
+    )
+    private List<Category> categories = new ArrayList<>(0);
 
     protected Customer() {
     }
@@ -53,5 +65,12 @@ public class Customer {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<Category> getCategogies() {
+        return this.categories;
+    }
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }
