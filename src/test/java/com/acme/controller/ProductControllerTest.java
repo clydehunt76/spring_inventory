@@ -48,7 +48,7 @@ public class ProductControllerTest {
     @Test
     public void getProducts() throws Exception {
         Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products/")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -78,7 +78,7 @@ public class ProductControllerTest {
         Product product = productRepository.save(new Product("Jack", "Bauer"));
         Category category = categoryRepository.save(new Category("Action Heroes"));
         product.getCategogies().add(category);
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/products")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/products/")
                 .content(new ObjectMapper().writeValueAsBytes(product))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

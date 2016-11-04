@@ -43,7 +43,7 @@ public class CategoryControllerTest {
     @Test
     public void getCategories() throws Exception {
         Category testCategory = repository.save(new Category("Action Heroes"));
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/categories")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/categories/")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -69,7 +69,7 @@ public class CategoryControllerTest {
     @Test
     public void postCategory() throws Exception {
         Category testCategory = repository.save(new Category("Action Heroes"));
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/categories")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/categories/")
                 .content(new ObjectMapper().writeValueAsBytes(testCategory))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
