@@ -80,7 +80,6 @@ Fork and clone this repository so that you may make commits of your work along t
 
 ## Reflection
 
-1. Did we write tests before code at all points in time?
-1. Did we communicate openly and effectively?
-1. Did one member of the pair dominate the session?
-1. Was there a specific pairing technique that was effective?
+1. Compare and contrast this version of the exercise with your previous implementation in node & express. Was this easier or harder? Simpler, or more complex?
+1. Compare and contrast database migrations vs ddl-auto... what are the advantages of each?
+1. What problems did you run into along the way? What was the best debugging technique? (logging, debugging, googling, etc?)
