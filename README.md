@@ -12,7 +12,7 @@ Use http://start.spring.io/ and select `Web`, `JPA`, and `Rest Repositories` to 
 
 #### Feature 0
 
-As a developer, I would like to have an API for creating and retrieving `categories`. A `category` document consists of the category `name` and its `_id`. 
+As a developer, I would like to have an API for creating and retrieving `categories`. A `category` record consists of the category `name` and its `_id`. 
 
 1. Start by creating the Category class, with the appropriate private fields. 
 1. Then use the `generate` capabilities of your IDE to create getters and setters, a constructor, and a `toString()` method.
@@ -24,7 +24,7 @@ If you get stuck, refer to the [Spring Boot Guides](https://spring.io/guides) fo
 
 #### Feature 1
 
-As a developer, I would like to have an API for creating, retrieving, and updating `products`. A `product` document consists of the `name`, `price`, and `description`. Like `categories`, `products` do not require persistence to complete this story. Storing them in an `HashMap<>` will do just fine.
+As a developer, I would like to have an API for creating, retrieving, and updating `products`. A `product` record consists of the `name`, `price`, and `description`. Like `categories`, `products` do not require persistence to complete this story. Storing them in an `HashMap<>` will do just fine.
 
 #### Feature 2
 
