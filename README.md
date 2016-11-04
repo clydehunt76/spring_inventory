@@ -1,42 +1,55 @@
-# Inventory SPA
+# Inventory SPA with Spring Boot
 
 ## Problems
 
 Complete these exercises in order, using `git` to checkpoint your work as you go along.
 
-As always, it is recommended that you read this entire problem set prior to beginning it so that you understand what you are building towards. Use your favorite front-end framework and a Spring Boot REST API to build a Single Page Application.
+As always, it is recommended that you read this entire problem set prior to beginning it so that you understand what you are building towards. Use React and a Spring Boot REST API to build a Single Page Application.
 
 ### Starting point
 
-Use `gradle init --type java-library` to Create a Gradle application in the directory that you cloned your forked repository to. You may call this application `products_and_categories` (or whatever you want that represents what it is). For this application you will not have to worry about style until stretch goals. Here are the features you are looking to build:
+Use http://start.spring.io/ and select `Web`, `JPA`, and `Rest Repositories` to create a Gradle application in the directory that you cloned your forked repository to. You may call this application `products_and_categories` (or whatever you want that represents what it is). For this application you will not have to worry about style until stretch goals. Here are the features you are looking to build:
 
 #### Feature 0
 
-As a developer, I would like to have an API for creating and retrieving `categories`. A `category` document consists of the category `name` and its `_id`.
+As a developer, I would like to have an API for creating and retrieving `categories`. A `category` document consists of the category `name` and its `_id`. 
 
-_Question_ Is this one story or multiple?
+1. Start by creating the Category class, with the appropriate private fields. 
+1. Then use the `generate` capabilities of your IDE to create getters and setters, a constructor, and a `toString()` method.
+1. Finally, create a [Controller](https://spring.io/guides/gs/serving-web-content/) which stores categories in a `HashMap<>`. (No persistence is required for this story)
+ 
+Be sure you are operating in a TDD manner, and using [MockMVC](https://spring.io/blog/2016/04/15/testing-improvements-in-spring-boot-1-4) to test your API as you go.
+
+If you get stuck, refer to the [Spring Boot Guides](https://spring.io/guides) for reference.
 
 #### Feature 1
 
-As a developer, I would like to have an API for creating, retrieving, and updating `products`. A `product` document consists of the `name`, `price`, `category` and `description`.
-
-_Question_ Is this one story or multiple?
+As a developer, I would like to have an API for creating, retrieving, and updating `products`. A `product` document consists of the `name`, `price`, `category` and `description`. Like `categories`, `products` do not require persistence to complete this story. Storing them in an `HashMap<>` will do just fine.
 
 #### Feature 2
 
-As an end user, I would like to have a single page application (SPA) flow for creating categories on the fly.
+As an end user, I would like to have my products and categories persist between server reboots.
 
-_Question_ Is this one story or multiple?
+1. Create a new database in MySQL.
+1. Use mvnrepository.com to find the latest `mysql-connector-java` and import it into your build.gradle file.
+1. Create one [Repository](https://spring.io/guides/gs/accessing-data-jpa/) for products, and one for categories.
+1. Use [ddl-auto](http://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html) to generate your database schema automatically
+1. Write tests to ensure you can save & retrieve products and categories
+1. Hook your existing MVC controller up to your new database!
 
 #### Feature 3
+
+As an end user, I would like to have a single page application (SPA) flow for creating categories on the fly.
+
+Use what [you've learned](https://learn.galvanize.com/content/gSchool/xp_curriculum/northland_1_revised/student_notes/react/introduction_to_react.md) about react.js to create the front end.   
+
+#### Feature 4
 
 As an end user, I would like to have a single page application (SPA) flow that allows me to create products, providing them with an associated category in the same flow. In this SPA, I should be able to create products and associate them with one or more categories (_hint_: this means checkboxes), as well as creating new categories. This is a rough mockup of what this looks like:
 
 <center>
   ![Wireframe of Products and Categories](https://galvanize.mybalsamiq.com/mockups/3831920.png?key=0a3a49896fe5fdecbd75cdc81da42a7e23eb14d6)
 </center>
-
-_Question_ Is this one story or multiple?
 
 #### Feature 4
 
