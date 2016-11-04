@@ -1,7 +1,9 @@
 package com.acme.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -11,8 +13,9 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private BigDecimal price;
+    private String description;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -26,19 +29,14 @@ public class Product {
     )
     private List<Category> categories = new ArrayList<>(0);
 
-    protected Product() {
+    public Product() {
+
     }
 
-    public Product(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "Product[id=%d, firstName='%s', lastName='%s']",
-                id, firstName, lastName);
+    public Product(String name, String price, String description) {
+        this.name = name;
+        this.price = new BigDecimal(price);
+        this.description = description;
     }
 
     public Long getId() {
@@ -49,27 +47,46 @@ public class Product {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public List<Category> getCategogies() {
-        return this.categories;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", categories=" + categories +
+                '}';
     }
 }

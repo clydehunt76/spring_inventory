@@ -47,7 +47,7 @@ public class ProductControllerTest {
 
     @Test
     public void getProducts() throws Exception {
-        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
+        Product product = productRepository.save(new Product("Plumbus", "1.00", "Just a regular old plumbus"));
         MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products/")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -55,30 +55,53 @@ public class ProductControllerTest {
         List<Product> products = mapper.readValue(result.getResponse().getContentAsString(),
                 typeFactory.constructCollectionType(List.class, Product.class));
         Assert.assertEquals(1, products.size());
-        Assert.assertEquals(testProduct.getFirstName(), products.get(0).getFirstName());
-        Assert.assertEquals(testProduct.getLastName(), products.get(0).getLastName());
+        Assert.assertEquals(product.getName(), products.get(0).getName());
+        Assert.assertEquals(product.getPrice(), products.get(0).getPrice());
+        Assert.assertEquals(product.getDescription(), products.get(0).getDescription());
     }
 
     @Test
     public void getProductById() throws Exception {
-        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products/" + testProduct.getId())
+        Product product = productRepository.save(new Product("Plumbus", "1.00", "Just a regular old plumbus"));
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/products/" + product.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         List<Product> products = mapper.readValue(result.getResponse().getContentAsString(),
                 typeFactory.constructCollectionType(List.class, Product.class));
         Assert.assertEquals(1, products.size());
-        Assert.assertEquals(testProduct.getFirstName(), products.get(0).getFirstName());
-        Assert.assertEquals(testProduct.getLastName(), products.get(0).getLastName());
+        Assert.assertEquals(product.getName(), products.get(0).getName());
+        Assert.assertEquals(product.getPrice(), products.get(0).getPrice());
+        Assert.assertEquals(product.getDescription(), products.get(0).getDescription());
     }
 
     @Test
     public void postProduct() throws Exception {
-        Product product = productRepository.save(new Product("Jack", "Bauer"));
+        Product product = productRepository.save(new Product("Plumbus", "1.00", "Just a regular old plumbus"));
         Category category = categoryRepository.save(new Category("Action Heroes"));
-        product.getCategogies().add(category);
+        product.getCategories().add(category);
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/products/")
+                .content(new ObjectMapper().writeValueAsBytes(product))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Product returned = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                typeFactory.constructType(Product.class)
+        );
+        Assert.assertNotNull(returned);
+        Assert.assertNotNull(returned.getId());
+        Assert.assertEquals(product.getName(), returned.getName());
+        Assert.assertEquals(product.getPrice(), returned.getPrice());
+        Assert.assertEquals(product.getDescription(), returned.getDescription());
+        Assert.assertEquals(1, product.getCategories().size());
+    }
+
+    @Test
+    public void putProduct() throws Exception {
+        Product product = productRepository.save(new Product("Plumbus", "1.00", "Just a regular old plumbus"));
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.put("/products/" + product.getId())
                 .content(new ObjectMapper().writeValueAsBytes(product))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -87,32 +110,16 @@ public class ProductControllerTest {
         Product returned = mapper.readValue(result.getResponse().getContentAsString(),
                 typeFactory.constructType(Product.class));
         Assert.assertNotNull(returned);
-        Assert.assertNotNull(returned.getId());
-        Assert.assertEquals(product.getFirstName(), returned.getFirstName());
-        Assert.assertEquals(product.getLastName(), returned.getLastName());
-    }
-
-    @Test
-    public void putProduct() throws Exception {
-        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.put("/products/" + testProduct.getId())
-                .content(new ObjectMapper().writeValueAsBytes(testProduct))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        Product returned = mapper.readValue(result.getResponse().getContentAsString(),
-                typeFactory.constructType(Product.class));
-        Assert.assertNotNull(returned);
-        Assert.assertEquals(testProduct.getId(), returned.getId());
-        Assert.assertEquals(testProduct.getFirstName(), returned.getFirstName());
-        Assert.assertEquals(testProduct.getLastName(), returned.getLastName());
+        Assert.assertEquals(product.getId(), returned.getId());
+        Assert.assertEquals(product.getName(), returned.getName());
+        Assert.assertEquals(product.getPrice(), returned.getPrice());
+        Assert.assertEquals(product.getDescription(), returned.getDescription());
     }
 
     @Test
     public void deleteProduct() throws Exception {
-        Product testProduct = productRepository.save(new Product("Jack", "Bauer"));
-        mvc.perform(MockMvcRequestBuilders.delete("/products/" + testProduct.getId())
+        Product product = productRepository.save(new Product("Plumbus", "1.00", "Just a regular old plumbus"));
+        mvc.perform(MockMvcRequestBuilders.delete("/products/" + product.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
