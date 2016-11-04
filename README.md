@@ -24,7 +24,7 @@ If you get stuck, refer to the [Spring Boot Guides](https://spring.io/guides) fo
 
 #### Feature 1
 
-As a developer, I would like to have an API for creating, retrieving, and updating `products`. A `product` document consists of the `name`, `price`, `category` and `description`. Like `categories`, `products` do not require persistence to complete this story. Storing them in an `HashMap<>` will do just fine.
+As a developer, I would like to have an API for creating, retrieving, and updating `products`. A `product` document consists of the `name`, `price`, and `description`. Like `categories`, `products` do not require persistence to complete this story. Storing them in an `HashMap<>` will do just fine.
 
 #### Feature 2
 
@@ -37,13 +37,20 @@ As an end user, I would like to have my products and categories persist between 
 1. Write tests to ensure you can save & retrieve products and categories
 1. Hook your existing MVC controller up to your new database!
 
-#### Feature 3 (Stretch)
+#### Feature 3
+
+As an end user, I would like to be able to link products to categories so that each product can belong to many categories, and each category can have many products.
+
+1. Review the [@ManyToMany](https://www.mkyong.com/hibernate/hibernate-many-to-many-relationship-example-annotation/) annotation
+1. Ensure you have tests to verify products and categories can be linked and unlinked
+
+#### Feature 4 (Stretch)
 
 As an end user, I would like to have a single page application (SPA) flow for creating categories on the fly.
 
 Use what [you've learned](https://learn.galvanize.com/content/gSchool/xp_curriculum/northland_1_revised/student_notes/react/introduction_to_react.md) about react.js to create the front end.   
 
-#### Feature 4 (Stretch)
+#### Feature 5 (Stretch)
 
 As an end user, I would like to have a single page application (SPA) flow that allows me to create products, providing them with an associated category in the same flow. In this SPA, I should be able to create products and associate them with one or more categories (_hint_: this means checkboxes), as well as creating new categories. This is a rough mockup of what this looks like:
 
@@ -51,7 +58,7 @@ As an end user, I would like to have a single page application (SPA) flow that a
   ![Wireframe of Products and Categories](https://galvanize.mybalsamiq.com/mockups/3831920.png?key=0a3a49896fe5fdecbd75cdc81da42a7e23eb14d6)
 </center>
 
-#### Feature 5 (Stretch)
+#### Feature 6 (Stretch)
 
 As an end user, I would like to have a more detailed view appear when I click on one of the specific product links in the Product List. This is a rough mockup of what this looks like:
 
