@@ -43,6 +43,7 @@ As an end user, I would like to be able to link products to categories so that e
 
 1. Review the [@ManyToMany](https://www.mkyong.com/hibernate/hibernate-many-to-many-relationship-example-annotation/) annotation
 1. Ensure you have tests to verify products and categories can be linked and unlinked
+1. Be wary of circular references, and understand the meaning of the JPA [Transient](http://stackoverflow.com/questions/2154622/why-does-jpa-have-a-transient-annotation) annotation.
 
 #### Feature 4 (Stretch)
 
