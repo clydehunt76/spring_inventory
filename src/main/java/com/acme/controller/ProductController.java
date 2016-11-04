@@ -8,25 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(path = "/products")
 public class ProductController {
 
     @Autowired
     ProductRepository repository;
 
-    @RequestMapping(path = "/products", method = RequestMethod.GET)
+    @GetMapping(path = "")
     public Iterable<Product> listProducts() {
         return repository.findAll();
     }
 
-    @RequestMapping(path = "/products", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(path = "")
     public Product createProduct(@RequestBody Product product) {
         Product saved = repository.save(product);
         return saved;
     }
 
-    @RequestMapping(path = "/products/{productId}", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(path = "/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
         if (productId == null || !productId.equals(product.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -35,13 +34,12 @@ public class ProductController {
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/products/{productId}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping(path = "/{productId}")
     public void deleteProduct(@PathVariable Long productId) {
         repository.delete(productId);
     }
 
-    @RequestMapping("/products/{productId}")
+    @RequestMapping("/{productId}")
     public Iterable<Product> products(@PathVariable Long productId) {
         return repository.findById(productId);
     }

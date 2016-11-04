@@ -8,25 +8,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(path = "/categories")
 public class CategoryController {
 
     @Autowired
     CategoryRepository repository;
 
-    @RequestMapping(path = "/categories", method = RequestMethod.GET)
+    @GetMapping(path = "")
     public Iterable<Category> listCategories() {
         return repository.findAll();
     }
 
-    @RequestMapping(path = "/categories", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(path = "")
     public Category createCategory(@RequestBody Category category) {
-        Category saved = repository.save(category);
-        return saved;
+        return repository.save(category);
     }
 
-    @RequestMapping(path = "/categories/{categoryId}", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(path = "/{categoryId}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
         if (categoryId == null || !categoryId.equals(category.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -35,13 +33,12 @@ public class CategoryController {
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/categories/{categoryId}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping(path = "/{categoryId}")
     public void deleteCategory(@PathVariable Long categoryId) {
         repository.delete(categoryId);
     }
 
-    @RequestMapping("/categories/{categoryId}")
+    @GetMapping(path = "/{categoryId}")
     public Iterable<Category> categories(@PathVariable Long categoryId) {
         return repository.findById(categoryId);
     }
