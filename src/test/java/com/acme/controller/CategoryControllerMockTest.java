@@ -74,4 +74,29 @@ public class CategoryControllerMockTest {
         assertThat(actual.getBody()).isEqualTo(expected);
 
     }
+
+    @Test
+    public void deleteCategoryTest() {
+        Long id = 1L;
+
+        controller.deleteCategory(id);
+
+        verify(mockRepo, times(1)).delete(id);
+
+    }
+
+    @Test
+    public void categoriesTest() {
+        List<Category> expected = Arrays.asList(new Category("Frustration"));
+        given(this.mockRepo.findById(1L)).willReturn(expected);
+
+        Long id = 1L;
+
+        Iterable<Category> actual = controller.categories(id);
+
+        List<Category> categories = StreamSupport.stream(actual.spliterator(), false).collect(Collectors.toList());
+
+        verify(mockRepo, times(1)).findById(id);
+        assertThat(categories).isEqualTo(expected);
+    }
 }
